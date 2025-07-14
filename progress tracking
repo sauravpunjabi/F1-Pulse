@@ -1,0 +1,21 @@
+# F1Pulse 🚀
+
+A modern, interactive Formula 1 fan site inspired by [Hatom.com](https://www.hatom.com/).
+
+## Tech Stack
+- Next.js 14
+- Tailwind CSS
+- Framer Motion
+- TypeScript
+
+## Planned Sections
+- [] Hero
+- [ ] Navbar
+- [ ] Race Calendar
+- [ ] Standings
+- [ ] Track Explorer
+- [ ] Blog/Updates
+- [ ] Footer
+
+## Status
+🛠️ Will start building once current project is done.
