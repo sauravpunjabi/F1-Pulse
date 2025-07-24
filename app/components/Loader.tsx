@@ -18,10 +18,7 @@ const Loader: React.FC<LoaderProps> = ({ onLoadingComplete }) => {
 
     if (titleRef.current && loaderRef.current) {
       // Initial fade-in of background
-      tl.fromTo(loaderRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.9, ease: 'power2.inOut' }
-      );
+       gsap.set(loaderRef.current, { opacity: 1 });
 
       // New text animation with scale
       tl.from(letterRefs.current, {
