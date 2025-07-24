@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 // import Image from 'next/image'
 // import f1Car from '/public/assets/f1-car.png'
 import { ArrowRight } from 'lucide-react'
+import Image from 'next/image'
 
 export default function Hero() {
   return (
@@ -37,14 +38,7 @@ export default function Hero() {
         transition={{ duration: 0.6 }}
         className="w-[300px] sm:w-[400px] md:w-[500px]"
       >
-        {/* <Image
-          src={f1Car}
-          alt="F1 Car"
-          width={500}
-          height={500}
-          className="object-contain drop-shadow-2xl"
-          priority
-        /> */}
+         <Image src="/assets/f1logo.jpg" alt="F1 Logo" width={500} height={300} />
       </motion.div>
     </section>
   )
