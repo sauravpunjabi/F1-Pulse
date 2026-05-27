@@ -1,3 +1,98 @@
-export default function Calendar() {
-  return <div className="slot min-h-96">[Calendar]</div>;
+'use client'
+
+import { useState, useEffect } from 'react'
+import { getRaceSchedule } from '@/lib/api'
+import type { Race } from '@/types'
+import SectionHeader from '@/components/ui/SectionHeader'
+import RaceCard from '@/components/ui/RaceCard'
+
+type Filter = 'all' | 'upcoming' | 'past'
+
+export default function RaceCalendar() {
+  const [races, setRaces] = useState<Race[]>([])
+  const [filter, setFilter] = useState<Filter>('all')
+
+  useEffect(() => {
+    getRaceSchedule().then(setRaces)
+  }, [])
+
+  const displayed = races.filter(r => {
+    if (filter === 'all') return true
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const isPast = new Date(r.date) < today
+    return filter === 'past' ? isPast : !isPast
+  })
+
+  const filterRight = (
+    <div
+      style={{
+        display: 'flex',
+        gap: 6,
+        padding: 4,
+        border: '1px solid var(--line)',
+        borderRadius: 999,
+        background: 'rgba(255,255,255,0.02)',
+      }}
+    >
+      {(['all', 'upcoming', 'past'] as Filter[]).map(f => (
+        <button
+          key={f}
+          onClick={() => setFilter(f)}
+          className="font-mono"
+          style={{
+            fontSize: 11,
+            textTransform: 'uppercase',
+            letterSpacing: '0.15em',
+            padding: '8px 14px',
+            borderRadius: 999,
+            border: 'none',
+            cursor: 'pointer',
+            background: filter === f ? 'var(--accent)' : 'transparent',
+            color: filter === f ? '#fff' : 'var(--text-3)',
+            transition: 'all 0.15s ease',
+          }}
+        >
+          {f}
+        </button>
+      ))}
+    </div>
+  )
+
+  return (
+    <section id="calendar" style={{ padding: '112px 0', position: 'relative' }}>
+      <div style={{ maxWidth: 1380, margin: '0 auto', padding: '0 32px' }}>
+        <style>{`
+          @media (max-width: 980px) { .cal-grid { grid-template-columns: repeat(2,1fr) !important; } }
+          @media (max-width: 640px) { .cal-grid { grid-template-columns: 1fr !important; } }
+        `}</style>
+
+        <SectionHeader
+          kicker="Calendar · 2026"
+          title="Twenty-four rounds. "
+          accent="One title."
+          sub="Every Grand Prix on the 2026 calendar — with circuit data and results."
+          right={filterRight}
+        />
+
+        <div
+          className="cal-grid"
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 18 }}
+        >
+          {displayed.map((race, i) => (
+            <RaceCard key={race.circuitId} race={race} index={i} />
+          ))}
+
+          {races.length === 0 && (
+            <div
+              className="slot"
+              style={{ gridColumn: '1/-1', minHeight: 200 }}
+            >
+              Loading calendar…
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  )
 }
