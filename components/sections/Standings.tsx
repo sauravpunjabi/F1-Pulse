@@ -90,9 +90,48 @@ export default function Standings() {
 }
 
 /* ─── Drivers panel ──────────────────────────────────────────── */
+function StandingsSkeleton() {
+  return (
+    <>
+      <style>{`@media (max-width: 980px) { .standings-grid { grid-template-columns: 1fr !important; } }`}</style>
+      <div className="standings-grid" style={{ display: 'grid', gridTemplateColumns: '0.9fr 1.1fr', gap: 18 }}>
+        {/* Leader card skeleton */}
+        <div className="surface" style={{ padding: 32, animation: 'pulse 1.8s ease-in-out infinite' }}>
+          <div style={{ height: 24, width: '55%', background: 'var(--line-strong)', borderRadius: 6, marginBottom: 20 }} />
+          <div style={{ height: 180, background: 'var(--ink-3)', borderRadius: 14, marginBottom: 20 }} />
+          <div style={{ height: 28, width: '70%', background: 'var(--line-strong)', borderRadius: 6, marginBottom: 10 }} />
+          <div style={{ height: 14, width: '45%', background: 'var(--ink-3)', borderRadius: 4, marginBottom: 24 }} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 0 }}>
+            {[0, 1, 2].map(i => (
+              <div key={i} style={{ padding: '0 0 0 16px', borderLeft: i > 0 ? '1px solid var(--line)' : 'none' }}>
+                <div style={{ height: 22, width: '50%', background: 'var(--line-strong)', borderRadius: 4, marginBottom: 8 }} />
+                <div style={{ height: 10, width: '70%', background: 'var(--ink-3)', borderRadius: 4 }} />
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Driver list skeleton */}
+        <div className="surface" style={{ padding: 8, animation: 'pulse 1.8s ease-in-out 0.1s infinite' }}>
+          <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--line)' }}>
+            <div style={{ height: 10, width: '80%', background: 'var(--ink-3)', borderRadius: 4 }} />
+          </div>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '16px 18px', borderTop: '1px solid var(--line)' }}>
+              <div style={{ height: 12, width: 28, background: 'var(--ink-3)', borderRadius: 4, flexShrink: 0 }} />
+              <div style={{ height: 14, width: '40%', background: 'var(--line-strong)', borderRadius: 4 }} />
+              <div style={{ height: 12, width: '15%', background: 'var(--ink-3)', borderRadius: 4, marginLeft: 'auto' }} />
+              <div style={{ height: 12, width: '10%', background: 'var(--ink-3)', borderRadius: 4 }} />
+              <div style={{ height: 18, width: '12%', background: 'var(--line-strong)', borderRadius: 4 }} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  )
+}
+
 function DriversPanel({ standings }: { standings: DriverStanding[] }) {
-  if (standings.length === 0)
-    return <div className="slot" style={{ minHeight: 400 }}>Loading standings…</div>
+  if (standings.length === 0) return <StandingsSkeleton />
 
   const leader = standings[0]
   const rest = standings.slice(1)
@@ -351,7 +390,26 @@ function DriversPanel({ standings }: { standings: DriverStanding[] }) {
 /* ─── Constructors panel ─────────────────────────────────────── */
 function ConstructorsPanel({ standings }: { standings: ConstructorStanding[] }) {
   if (standings.length === 0)
-    return <div className="slot" style={{ minHeight: 400 }}>Loading standings…</div>
+    return (
+      <>
+        <style>{`@media (max-width: 720px) { .constructors-grid { grid-template-columns: 1fr !important; } }`}</style>
+        <div className="constructors-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 18 }}>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="surface" style={{ padding: 24, animation: `pulse 1.8s ease-in-out ${i * 0.08}s infinite` }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 18 }}>
+                <div>
+                  <div style={{ height: 10, width: 40, background: 'var(--ink-3)', borderRadius: 4, marginBottom: 8 }} />
+                  <div style={{ height: 20, width: 120, background: 'var(--line-strong)', borderRadius: 4 }} />
+                </div>
+                <div style={{ height: 32, width: 48, background: 'var(--line-strong)', borderRadius: 4 }} />
+              </div>
+              <div style={{ height: 4, background: 'var(--ink-3)', borderRadius: 2, marginBottom: 16 }} />
+              <div style={{ height: 10, width: '60%', background: 'var(--ink-3)', borderRadius: 4 }} />
+            </div>
+          ))}
+        </div>
+      </>
+    )
 
   const maxPoints = standings[0]?.points || 1
 

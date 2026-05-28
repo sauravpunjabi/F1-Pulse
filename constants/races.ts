@@ -1,0 +1,28 @@
+import type { Race } from '@/types'
+
+export const RACES_2026: Race[] = [
+  { round: 1,  season: '2026', raceName: 'Australian Grand Prix',      circuitId: 'albert_park',   circuitName: 'Albert Park Grand Prix Circuit',  country: 'Australia',    locality: 'Melbourne',     date: '2026-03-15' },
+  { round: 2,  season: '2026', raceName: 'Chinese Grand Prix',         circuitId: 'shanghai',      circuitName: 'Shanghai International Circuit',   country: 'China',        locality: 'Shanghai',      date: '2026-03-22' },
+  { round: 3,  season: '2026', raceName: 'Japanese Grand Prix',        circuitId: 'suzuka',        circuitName: 'Suzuka Circuit',                   country: 'Japan',        locality: 'Suzuka',        date: '2026-04-05' },
+  { round: 4,  season: '2026', raceName: 'Bahrain Grand Prix',         circuitId: 'bahrain',       circuitName: 'Bahrain International Circuit',    country: 'Bahrain',      locality: 'Sakhir',        date: '2026-04-19' },
+  { round: 5,  season: '2026', raceName: 'Saudi Arabian Grand Prix',   circuitId: 'jeddah',        circuitName: 'Jeddah Corniche Circuit',          country: 'Saudi Arabia', locality: 'Jeddah',        date: '2026-04-26' },
+  { round: 6,  season: '2026', raceName: 'Miami Grand Prix',           circuitId: 'miami',         circuitName: 'Miami International Autodrome',    country: 'USA',          locality: 'Miami',         date: '2026-05-10' },
+  { round: 7,  season: '2026', raceName: 'Emilia Romagna Grand Prix',  circuitId: 'imola',         circuitName: 'Autodromo Enzo e Dino Ferrari',    country: 'Italy',        locality: 'Imola',         date: '2026-05-17' },
+  { round: 8,  season: '2026', raceName: 'Monaco Grand Prix',          circuitId: 'monaco',        circuitName: 'Circuit de Monaco',                country: 'Monaco',       locality: 'Monte-Carlo',   date: '2026-05-24' },
+  { round: 9,  season: '2026', raceName: 'Spanish Grand Prix',         circuitId: 'catalunya',     circuitName: 'Circuit de Barcelona-Catalunya',   country: 'Spain',        locality: 'Montmeló',      date: '2026-06-07' },
+  { round: 10, season: '2026', raceName: 'Canadian Grand Prix',        circuitId: 'villeneuve',    circuitName: 'Circuit Gilles Villeneuve',        country: 'Canada',       locality: 'Montreal',      date: '2026-06-14' },
+  { round: 11, season: '2026', raceName: 'Austrian Grand Prix',        circuitId: 'red_bull_ring', circuitName: 'Red Bull Ring',                    country: 'Austria',      locality: 'Spielberg',     date: '2026-06-28' },
+  { round: 12, season: '2026', raceName: 'British Grand Prix',         circuitId: 'silverstone',   circuitName: 'Silverstone Circuit',              country: 'UK',           locality: 'Silverstone',   date: '2026-07-05' },
+  { round: 13, season: '2026', raceName: 'Belgian Grand Prix',         circuitId: 'spa',           circuitName: 'Circuit de Spa-Francorchamps',     country: 'Belgium',      locality: 'Spa',           date: '2026-07-26' },
+  { round: 14, season: '2026', raceName: 'Hungarian Grand Prix',       circuitId: 'hungaroring',   circuitName: 'Hungaroring',                      country: 'Hungary',      locality: 'Budapest',      date: '2026-08-02' },
+  { round: 15, season: '2026', raceName: 'Dutch Grand Prix',           circuitId: 'zandvoort',     circuitName: 'Circuit Zandvoort',                country: 'Netherlands',  locality: 'Zandvoort',     date: '2026-08-30' },
+  { round: 16, season: '2026', raceName: 'Italian Grand Prix',         circuitId: 'monza',         circuitName: 'Autodromo Nazionale di Monza',     country: 'Italy',        locality: 'Monza',         date: '2026-09-06' },
+  { round: 17, season: '2026', raceName: 'Azerbaijan Grand Prix',      circuitId: 'baku',          circuitName: 'Baku City Circuit',                country: 'Azerbaijan',   locality: 'Baku',          date: '2026-09-20' },
+  { round: 18, season: '2026', raceName: 'Singapore Grand Prix',       circuitId: 'marina_bay',    circuitName: 'Marina Bay Street Circuit',        country: 'Singapore',    locality: 'Marina Bay',    date: '2026-10-04' },
+  { round: 19, season: '2026', raceName: 'United States Grand Prix',   circuitId: 'americas',      circuitName: 'Circuit of the Americas',          country: 'USA',          locality: 'Austin',        date: '2026-10-18' },
+  { round: 20, season: '2026', raceName: 'Mexico City Grand Prix',     circuitId: 'rodriguez',     circuitName: 'Autodromo Hermanos Rodriguez',     country: 'Mexico',       locality: 'Mexico City',   date: '2026-10-25' },
+  { round: 21, season: '2026', raceName: 'São Paulo Grand Prix',       circuitId: 'interlagos',    circuitName: 'Autodromo José Carlos Pace',       country: 'Brazil',       locality: 'São Paulo',     date: '2026-11-08' },
+  { round: 22, season: '2026', raceName: 'Las Vegas Grand Prix',       circuitId: 'vegas',         circuitName: 'Las Vegas Strip Circuit',          country: 'USA',          locality: 'Las Vegas',     date: '2026-11-21' },
+  { round: 23, season: '2026', raceName: 'Qatar Grand Prix',           circuitId: 'losail',        circuitName: 'Lusail International Circuit',     country: 'Qatar',        locality: 'Lusail',        date: '2026-11-29' },
+  { round: 24, season: '2026', raceName: 'Abu Dhabi Grand Prix',       circuitId: 'yas_marina',    circuitName: 'Yas Marina Circuit',               country: 'UAE',          locality: 'Abu Dhabi',     date: '2026-12-06' },
+]

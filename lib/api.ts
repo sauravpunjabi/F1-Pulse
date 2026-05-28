@@ -9,8 +9,9 @@ import type {
   LiveDriver,
 } from "@/types";
 import { TEAMS, DRIVERS } from "@/constants/data";
+import { RACES_2026 } from "@/constants/races";
 
-const ERGAST = "https://ergast.com/api/f1";
+const ERGAST = "https://api.jolpi.ca/ergast/f1";
 const OPENF1 = "https://api.openf1.org/v1";
 
 /* ─── Ergast helpers ─────────────────────────────────────────── */
@@ -98,7 +99,7 @@ export async function getRaceSchedule(): Promise<Race[]> {
       url: (r as { url?: string }).url,
     }));
   } catch {
-    return [];
+    return RACES_2026;
   }
 }
 

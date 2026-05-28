@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -19,6 +19,10 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
 });
+
+export const viewport: Viewport = {
+  themeColor: '#050608',
+}
 
 export const metadata: Metadata = {
   title: "F1Pulse — Formula 1 Analytics",

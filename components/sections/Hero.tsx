@@ -93,7 +93,15 @@ export default function Hero() {
           zIndex: 1,
         }}
       >
-        <style>{`@media (max-width: 980px) { .hero-grid { grid-template-columns: 1fr !important; } }`}</style>
+        <style>{`
+          @media (max-width: 980px) {
+            .hero-grid { grid-template-columns: 1fr !important; }
+            .hero-comp-wrap { display: none !important; }
+          }
+          @media (max-width: 375px) {
+            .hero-stats { grid-template-columns: repeat(2,1fr) !important; }
+          }
+        `}</style>
         <div
           className="hero-grid"
           style={{
@@ -152,6 +160,7 @@ export default function Hero() {
 
             {/* Stats strip */}
             <div
+              className="hero-stats"
               style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(4, 1fr)',
@@ -191,8 +200,10 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* ── Right column ── */}
-          <HeroComposition nextRace={nextRace} />
+          {/* ── Right column — hidden below 980px ── */}
+          <div className="hero-comp-wrap">
+            <HeroComposition nextRace={nextRace} />
+          </div>
         </div>
       </div>
 

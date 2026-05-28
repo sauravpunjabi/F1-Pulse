@@ -83,14 +83,27 @@ export default function RaceCalendar() {
             <RaceCard key={race.circuitId} race={race} index={i} />
           ))}
 
-          {races.length === 0 && (
-            <div
-              className="slot"
-              style={{ gridColumn: '1/-1', minHeight: 200 }}
-            >
-              Loading calendar…
-            </div>
-          )}
+          {races.length === 0 &&
+            Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="surface"
+                style={{
+                  padding: 24,
+                  animation: `pulse 1.8s ease-in-out ${i * 0.12}s infinite`,
+                }}
+              >
+                <div style={{ height: 10, width: '35%', background: 'var(--line-strong)', borderRadius: 4, marginBottom: 14 }} />
+                <div style={{ height: 20, width: '65%', background: 'var(--line-strong)', borderRadius: 4, marginBottom: 8 }} />
+                <div style={{ height: 10, width: '45%', background: 'var(--ink-3)', borderRadius: 4, marginBottom: 28 }} />
+                <div style={{ height: 1, background: 'var(--line)', marginBottom: 18 }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ height: 10, width: '28%', background: 'var(--ink-3)', borderRadius: 4 }} />
+                  <div style={{ height: 10, width: '18%', background: 'var(--ink-3)', borderRadius: 4 }} />
+                </div>
+              </div>
+            ))
+          }
         </div>
       </div>
     </section>
