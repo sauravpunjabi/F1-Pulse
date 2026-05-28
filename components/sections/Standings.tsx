@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion, type Variants } from 'framer-motion'
-import { getDriverStandings, getConstructorStandings } from '@/lib/api'
 import { TEAM_MAP, DRIVER_MAP } from '@/constants/grid'
 import SectionHeader from '@/components/ui/SectionHeader'
 
@@ -30,18 +29,15 @@ const rowItem: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
 }
 
-export default function Standings() {
-  const [mode, setMode] = useState<Mode>('drivers')
+interface StandingsProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [drivers, setDrivers] = useState<any[]>([])
+  drivers: any[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [constructors, setConstructors] = useState<any[]>([])
+  constructors: any[]
+}
 
-  useEffect(() => {
-    Promise.all([getDriverStandings(), getConstructorStandings()]).then(
-      ([d, c]) => { setDrivers(d); setConstructors(c) }
-    )
-  }, [])
+export default function Standings({ drivers, constructors }: StandingsProps) {
+  const [mode, setMode] = useState<Mode>('drivers')
 
   const modeToggle = (
     <div
@@ -414,7 +410,8 @@ function ConstructorsPanel({ standings }: { standings: any[] }) {
       </>
     )
 
-  const maxPoints = standings[0]?.points || 1
+  const sorted = [...standings].sort((a, b) => a.position - b.position)
+  const maxPoints = sorted[0]?.points || 1
 
   return (
     <>
@@ -423,7 +420,7 @@ function ConstructorsPanel({ standings }: { standings: any[] }) {
         className="constructors-grid"
         style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 18 }}
       >
-        {standings.map((s, i) => {
+        {sorted.map((s, i) => {
           const teamId = tid(s.team.id)
           const team = TEAM_MAP[teamId]
           const color = s.team.color ?? team?.color ?? '#666'
@@ -458,7 +455,7 @@ function ConstructorsPanel({ standings }: { standings: any[] }) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
                   <div>
                     <span className="font-mono" style={{ fontSize: 9.5, color: 'var(--text-4)', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>
-                      POS · {String(i + 1).padStart(2, '0')}
+                      POS · {String(s.position).padStart(2, '0')}
                     </span>
                     <span className="font-display" style={{ fontSize: 26, fontWeight: 500, letterSpacing: '-0.02em' }}>
                       {s.team.name}

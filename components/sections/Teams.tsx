@@ -6,34 +6,18 @@ import { motion, type Variants } from 'framer-motion'
 import { TEAMS, DRIVERS, DRIVER_MAP } from '@/constants/grid'
 import SectionHeader from '@/components/ui/SectionHeader'
 
-const CPTS: Record<string, number> = {
-  mclaren: 261, ferrari: 245, mercedes: 156, redbull: 143,
-  williams: 87, aston: 74, alpine: 45, haas: 38,
-  rbulls: 29, audi: 18, cadillac: 12,
+/* Map Ergast constructor IDs → TEAM_MAP keys (same as Standings) */
+const T: Record<string, string> = {
+  red_bull: 'redbull', aston_martin: 'aston', rb: 'rbulls',
+  sauber: 'audi', kick_sauber: 'audi',
 }
+function tid(id: string) { return T[id] ?? id }
 
-const DPTS: Record<string, number> = {
-  norris: 145, piastri: 116, hamilton: 140, leclerc: 105,
-  russell: 89, antonelli: 67, verstappen: 80, hadjar: 63,
-  sainz: 55, albon: 32, alonso: 44, stroll: 30,
-  gasly: 28, colapinto: 17, ocon: 24, bearman: 14,
-  lawson: 18, lindblad: 11, hulkenberg: 12, bortoleto: 6,
-  perez: 8, bottas: 4,
-}
-
-/* Simulated recent race positions per team (last 7 races, oldest → newest) */
-const FORM: Record<string, number[]> = {
-  mclaren:  [2, 1, 2, 1, 3, 2, 1],
-  ferrari:  [1, 3, 1, 2, 1, 3, 2],
-  mercedes: [4, 3, 5, 4, 3, 4, 5],
-  redbull:  [3, 5, 3, 5, 4, 5, 4],
-  williams: [7, 6, 8, 7, 6, 8, 7],
-  aston:    [5, 7, 6, 6, 7, 6, 6],
-  alpine:   [8, 9, 8,10, 9, 9,10],
-  haas:     [9, 8,10, 8,10, 8, 9],
-  rbulls:   [10,11, 9,10,11,10,11],
-  audi:     [11,12,11,13,11,12,13],
-  cadillac: [13,14,12,14,13,13,14],
+interface TeamsProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructors: any[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  drivers: any[]
 }
 
 const gridContainer: Variants = {
@@ -45,8 +29,19 @@ const gridItem: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
 }
 
-export default function Teams() {
+export default function Teams({ constructors, drivers }: TeamsProps) {
   const [hoveredTeam, setHoveredTeam] = useState<string | null>(null)
+
+  const maxPts = constructors[0]?.points || 1
+
+  // Sort TEAMS by real constructor standings position
+  const posMap: Record<string, number> = {}
+  for (const c of constructors) {
+    posMap[tid(c.team.id)] = c.position
+  }
+  const sortedTeams = constructors.length > 0
+    ? [...TEAMS].sort((a, b) => (posMap[a.id] ?? 99) - (posMap[b.id] ?? 99))
+    : TEAMS
 
   return (
     <section id="teams" style={{ padding: '112px 0' }}>
@@ -81,12 +76,14 @@ export default function Teams() {
           viewport={{ once: true, margin: '-80px' }}
           style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 18 }}
         >
-          {TEAMS.map(team => {
+          {sortedTeams.map(team => {
             const isHovered = hoveredTeam === team.id
             const color = team.color
             const teamDrivers = DRIVERS.filter(d => d.teamId === team.id)
-            const form = FORM[team.id] ?? [5,5,5,5,5,5,5]
-            const pts = CPTS[team.id] ?? 0
+
+            const standing = constructors.find(c => tid(c.team.id) === team.id)
+            const pts = standing?.points ?? 0
+            const position = standing?.position ?? null
 
             return (
               <motion.div
@@ -184,51 +181,55 @@ export default function Teams() {
                       {team.base}
                     </div>
 
-                    {/* Form bars */}
+                    {/* Championship standing */}
                     <div style={{ borderTop: '1px solid var(--line)', marginTop: 22, paddingTop: 18 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                        <span className="font-mono" style={{ fontSize: 9, color: 'var(--text-4)', letterSpacing: '0.1em' }}>RECENT FORM</span>
+                        <span className="font-mono" style={{ fontSize: 9, color: 'var(--text-4)', letterSpacing: '0.1em' }}>
+                          {position ? `P${String(position).padStart(2, '0')} CHAMPIONSHIP` : 'CHAMPIONSHIP'}
+                        </span>
                         <span className="font-mono" style={{ fontSize: 9, color: 'var(--text-3)', letterSpacing: '0.06em' }}>
                           {pts} PTS
                         </span>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'flex-end', height: 26, gap: 4 }}>
-                        {form.map((pos, i) => (
-                          <div
-                            key={i}
-                            style={{
-                              flex: 1,
-                              height: `${Math.max(20, 100 - pos * 9)}%`,
-                              background: color,
-                              borderRadius: 2,
-                              opacity: 0.4 + (i / 6) * 0.6,
-                            }}
-                          />
-                        ))}
+                      <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
+                        <div
+                          style={{
+                            height: '100%',
+                            width: `${maxPts > 0 ? (pts / maxPts) * 100 : 0}%`,
+                            background: color,
+                            borderRadius: 2,
+                            boxShadow: `0 0 6px ${color}88`,
+                            transition: 'width 0.6s ease',
+                          }}
+                        />
                       </div>
                     </div>
 
                     {/* Drivers */}
                     <div style={{ marginTop: 18, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                      {teamDrivers.map(driver => (
-                        <div
-                          key={driver.slug}
-                          style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-                        >
-                          <span
-                            className="font-mono"
-                            style={{ fontSize: 10, fontWeight: 600, color, minWidth: 24 }}
+                      {teamDrivers.map(driver => {
+                        const dStanding = drivers.find(d => d.driver.slug === driver.slug)
+                        const dPts = dStanding?.points ?? 0
+                        return (
+                          <div
+                            key={driver.slug}
+                            style={{ display: 'flex', alignItems: 'center', gap: 8 }}
                           >
-                            {driver.number}
-                          </span>
-                          <span style={{ fontSize: 13, color: 'var(--text-1)', flex: 1 }}>
-                            {driver.firstName[0]}. {driver.lastName}
-                          </span>
-                          <span style={{ fontSize: 12, color: 'var(--text-3)' }}>
-                            {DPTS[driver.slug] ?? 0}
-                          </span>
-                        </div>
-                      ))}
+                            <span
+                              className="font-mono"
+                              style={{ fontSize: 10, fontWeight: 600, color, minWidth: 24 }}
+                            >
+                              {driver.number}
+                            </span>
+                            <span style={{ fontSize: 13, color: 'var(--text-1)', flex: 1 }}>
+                              {driver.firstName[0]}. {driver.lastName}
+                            </span>
+                            <span style={{ fontSize: 12, color: 'var(--text-3)' }}>
+                              {dPts}
+                            </span>
+                          </div>
+                        )
+                      })}
                     </div>
                   </div>
                 </Link>

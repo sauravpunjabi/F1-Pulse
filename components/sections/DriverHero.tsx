@@ -1,9 +1,17 @@
 'use client'
 
+import Image from 'next/image'
 import { motion, type Variants } from 'framer-motion'
 import Link from 'next/link'
 import { TEAM_MAP } from '@/constants/grid'
 import type { Driver } from '@/types'
+
+type WikiData = {
+  image: string | null
+  thumbnail: string | null
+  bio: string | null
+  url: string | null
+}
 
 const container: Variants = {
   hidden: {},
@@ -14,7 +22,7 @@ const item: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
 }
 
-export default function DriverHero({ driver }: { driver: Driver }) {
+export default function DriverHero({ driver, wiki }: { driver: Driver; wiki: WikiData }) {
   const team = TEAM_MAP[driver.teamId]
   const color = team?.color ?? '#E10600'
 
@@ -28,6 +36,10 @@ export default function DriverHero({ driver }: { driver: Driver }) {
         borderTop: `4px solid ${color}`,
       }}
     >
+      <style>{`
+        @media (max-width: 980px) { .driver-portrait { display: none !important; } }
+      `}</style>
+
       {/* Number watermark */}
       <div
         className="font-display"
@@ -69,10 +81,13 @@ export default function DriverHero({ driver }: { driver: Driver }) {
           padding: '0 32px',
           position: 'relative',
           zIndex: 1,
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: 48,
         }}
       >
-        <motion.div variants={container} initial="hidden" animate="show">
-          {/* Eyebrow */}
+        {/* Left: text content */}
+        <motion.div variants={container} initial="hidden" animate="show" style={{ flex: 1, minWidth: 0 }}>
           <motion.p
             variants={item}
             className="eyebrow"
@@ -81,7 +96,6 @@ export default function DriverHero({ driver }: { driver: Driver }) {
             NO.{driver.number} · {driver.nationality} · {team?.name ?? driver.teamId}
           </motion.p>
 
-          {/* Driver name */}
           <motion.h1
             variants={item}
             className="font-display"
@@ -99,7 +113,6 @@ export default function DriverHero({ driver }: { driver: Driver }) {
             <span style={{ color }}>{driver.lastName}</span>
           </motion.h1>
 
-          {/* Team link + flag + nationality */}
           <motion.div
             variants={item}
             style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}
@@ -140,6 +153,29 @@ export default function DriverHero({ driver }: { driver: Driver }) {
             )}
           </motion.div>
         </motion.div>
+
+        {/* Right: portrait */}
+        {wiki.image && (
+          <div
+            className="driver-portrait"
+            style={{
+              position: 'relative',
+              width: 300,
+              height: 420,
+              flexShrink: 0,
+              borderRadius: 8,
+              overflow: 'hidden',
+            }}
+          >
+            <Image
+              src={wiki.image}
+              alt={driver.slug}
+              fill
+              className="object-cover object-top"
+              sizes="(max-width: 980px) 100vw, 50vw"
+            />
+          </div>
+        )}
       </div>
     </section>
   )

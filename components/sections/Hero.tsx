@@ -1,8 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { getRaceSchedule } from '@/lib/api'
 import HeroComposition from '@/components/ui/HeroComposition'
 import Ticker from '@/components/ui/Ticker'
 
@@ -26,18 +24,15 @@ const STATS = [
   { v: '1042', l: 'drivers indexed' },
 ]
 
-export default function Hero() {
+interface HeroProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [nextRace, setNextRace] = useState<any>(FALLBACK_RACE)
+  nextRace?: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  lastRace?: any
+}
 
-  useEffect(() => {
-    getRaceSchedule().then(races => {
-      const today = new Date()
-      today.setHours(0, 0, 0, 0)
-      const next = races.find(r => new Date(r.date) >= today)
-      if (next) setNextRace(next)
-    })
-  }, [])
+export default function Hero({ nextRace: raceProp, lastRace: _lastRace }: HeroProps) {
+  const nextRace = raceProp ?? FALLBACK_RACE
 
   return (
     <section

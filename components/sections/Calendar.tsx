@@ -1,20 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { getRaceSchedule } from '@/lib/api'
+import { useState } from 'react'
 import SectionHeader from '@/components/ui/SectionHeader'
 import RaceCard from '@/components/ui/RaceCard'
 
 type Filter = 'all' | 'upcoming' | 'past'
 
-export default function RaceCalendar() {
+interface CalendarProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [races, setRaces] = useState<any[]>([])
-  const [filter, setFilter] = useState<Filter>('all')
+  races: any[]
+}
 
-  useEffect(() => {
-    getRaceSchedule().then(setRaces)
-  }, [])
+export default function RaceCalendar({ races }: CalendarProps) {
+  const [filter, setFilter] = useState<Filter>('all')
 
   const displayed = races.filter(r => {
     if (filter === 'all') return true

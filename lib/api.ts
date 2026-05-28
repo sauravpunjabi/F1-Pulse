@@ -378,6 +378,21 @@ export async function getWikiData(wikiTitle: string) {
   }
 }
 
+/* ─── Races completed this season ────────────────────────────── */
+
+export async function getCurrentRound(): Promise<number> {
+  try {
+    const res = await fetch(
+      `${ERGAST}/current/last/results.json?limit=1`,
+      { next: { revalidate: 60 } }
+    )
+    const data = await res.json()
+    return parseInt(data.MRData.RaceTable.Races[0]?.round ?? '0')
+  } catch {
+    return 0
+  }
+}
+
 /* ─── Live session (OpenF1) ───────────────────────────────────── */
 
 export async function getLivePositions() {
