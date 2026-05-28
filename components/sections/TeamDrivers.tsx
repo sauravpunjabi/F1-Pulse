@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { DRIVER_MAP } from '@/constants/data'
+import { DRIVER_MAP } from '@/constants/grid'
 import { CAREER } from '@/constants/careerStats'
 import type { Team } from '@/types'
 

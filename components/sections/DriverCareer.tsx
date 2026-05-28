@@ -3,7 +3,7 @@
 import { motion, type Variants } from 'framer-motion'
 import Link from 'next/link'
 import { CAREER } from '@/constants/career'
-import { TEAM_MAP } from '@/constants/data'
+import { TEAM_MAP } from '@/constants/grid'
 import type { Driver } from '@/types'
 
 const container: Variants = {

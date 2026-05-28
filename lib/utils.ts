@@ -1,4 +1,4 @@
-import { TEAM_MAP } from "@/constants/data";
+import { TEAM_MAP } from "@/constants/grid";
 
 export function getTeamColor(teamId: string): string {
   return TEAM_MAP[teamId]?.color ?? "#ffffff";

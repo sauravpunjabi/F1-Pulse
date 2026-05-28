@@ -3,19 +3,20 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { getRaceSchedule } from '@/lib/api'
-import type { Race } from '@/types'
 import HeroComposition from '@/components/ui/HeroComposition'
 import Ticker from '@/components/ui/Ticker'
 
-const FALLBACK_RACE: Race = {
+const FALLBACK_RACE = {
   round: 8,
-  raceName: 'Monaco Grand Prix',
+  name: 'Monaco Grand Prix',
   circuitId: 'monaco',
-  circuitName: 'Circuit de Monaco',
+  circuit: 'Circuit de Monaco',
   country: 'Monaco',
-  locality: 'Monte-Carlo',
+  city: 'Monte-Carlo',
   date: '2026-05-24',
-  season: '2026',
+  status: 'next',
+  slug: 'monaco',
+  time: null, fp1: null, fp2: null, qualifying: null, sprint: null,
 }
 
 const STATS = [
@@ -26,7 +27,8 @@ const STATS = [
 ]
 
 export default function Hero() {
-  const [nextRace, setNextRace] = useState<Race>(FALLBACK_RACE)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [nextRace, setNextRace] = useState<any>(FALLBACK_RACE)
 
   useEffect(() => {
     getRaceSchedule().then(races => {

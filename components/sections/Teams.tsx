@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { motion, type Variants } from 'framer-motion'
-import { TEAMS, DRIVERS, DRIVER_MAP } from '@/constants/data'
+import { TEAMS, DRIVERS, DRIVER_MAP } from '@/constants/grid'
 import SectionHeader from '@/components/ui/SectionHeader'
 
 const CPTS: Record<string, number> = {

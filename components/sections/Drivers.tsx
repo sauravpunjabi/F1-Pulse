@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { motion, type Variants } from 'framer-motion'
-import { DRIVERS, TEAM_MAP } from '@/constants/data'
+import { DRIVERS, TEAM_MAP } from '@/constants/grid'
 import SectionHeader from '@/components/ui/SectionHeader'
 
 const gridContainer: Variants = {

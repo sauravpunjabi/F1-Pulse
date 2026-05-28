@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, type Variants } from 'framer-motion'
-import { DRIVERS, TEAM_MAP } from '@/constants/data'
+import { DRIVERS, TEAM_MAP } from '@/constants/grid'
 import { CAREER } from '@/constants/careerStats'
 import type { CareerStat } from '@/constants/careerStats'
 import SectionHeader from '@/components/ui/SectionHeader'

@@ -2,7 +2,7 @@
 
 import { motion, type Variants } from 'framer-motion'
 import { CAREER } from '@/constants/careerStats'
-import { TEAM_MAP } from '@/constants/data'
+import { TEAM_MAP } from '@/constants/grid'
 import type { Driver } from '@/types'
 
 const S26: Record<string, { pts: number; wins: number; podiums: number }> = {

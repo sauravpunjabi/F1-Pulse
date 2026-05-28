@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, type Variants } from 'framer-motion'
 import { getDriverStandings, getConstructorStandings } from '@/lib/api'
-import type { DriverStanding, ConstructorStanding } from '@/types'
-import { TEAM_MAP, DRIVER_MAP } from '@/constants/data'
+import { TEAM_MAP, DRIVER_MAP } from '@/constants/grid'
 import SectionHeader from '@/components/ui/SectionHeader'
 
 type Mode = 'drivers' | 'constructors'
@@ -33,8 +32,10 @@ const rowItem: Variants = {
 
 export default function Standings() {
   const [mode, setMode] = useState<Mode>('drivers')
-  const [drivers, setDrivers] = useState<DriverStanding[]>([])
-  const [constructors, setConstructors] = useState<ConstructorStanding[]>([])
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [drivers, setDrivers] = useState<any[]>([])
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [constructors, setConstructors] = useState<any[]>([])
 
   useEffect(() => {
     Promise.all([getDriverStandings(), getConstructorStandings()]).then(
@@ -130,15 +131,16 @@ function StandingsSkeleton() {
   )
 }
 
-function DriversPanel({ standings }: { standings: DriverStanding[] }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function DriversPanel({ standings }: { standings: any[] }) {
   if (standings.length === 0) return <StandingsSkeleton />
 
   const leader = standings[0]
   const rest = standings.slice(1)
   const maxPoints = leader.points || 1
-  const leaderTeamId = tid(leader.teamId)
-  const leaderTeamColor = TEAM_MAP[leaderTeamId]?.color ?? '#E10600'
-  const leaderDriver = DRIVER_MAP[leader.driverId]
+  const leaderTeamId = tid(leader.team.id)
+  const leaderTeamColor = leader.team.color ?? TEAM_MAP[leaderTeamId]?.color ?? '#E10600'
+  const leaderDriver = DRIVER_MAP[leader.driver.slug]
 
   return (
     <>
@@ -239,7 +241,7 @@ function DriversPanel({ standings }: { standings: DriverStanding[] }) {
             className="font-display"
             style={{ fontSize: 38, fontWeight: 500, letterSpacing: '-0.02em', lineHeight: 1.1, marginBottom: 8 }}
           >
-            {leader.driverName}
+            {leader.driver.firstName} {leader.driver.lastName}
           </div>
 
           {/* Team · nationality | points */}
@@ -250,7 +252,7 @@ function DriversPanel({ standings }: { standings: DriverStanding[] }) {
             }}
           >
             <span style={{ fontSize: 13, color: 'var(--text-3)' }}>
-              {leader.teamName} · {leader.nationality}
+              {leader.team.name} · {leader.driver.nationality}
             </span>
             <span
               className="font-display"
@@ -314,13 +316,13 @@ function DriversPanel({ standings }: { standings: DriverStanding[] }) {
             viewport={{ once: true, margin: '-80px' }}
           >
             {rest.map((s, i) => {
-              const teamId = tid(s.teamId)
-              const color = TEAM_MAP[teamId]?.color ?? '#666'
-              const driver = DRIVER_MAP[s.driverId]
+              const teamId = tid(s.team.id)
+              const color = s.team.color ?? TEAM_MAP[teamId]?.color ?? '#666'
+              const driver = DRIVER_MAP[s.driver.slug]
 
               return (
                 <motion.div
-                  key={s.driverId}
+                  key={s.driver.id}
                   variants={rowItem}
                   whileHover={{ y: -3, transition: { duration: 0.25, ease: 'easeOut' } }}
                   style={{
@@ -342,15 +344,15 @@ function DriversPanel({ standings }: { standings: DriverStanding[] }) {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{ width: 3, height: 24, background: color, borderRadius: 1, flexShrink: 0 }} />
                     <div>
-                      <div style={{ fontSize: 15, color: 'var(--text-1)', lineHeight: 1.2 }}>{s.driverName}</div>
+                      <div style={{ fontSize: 15, color: 'var(--text-1)', lineHeight: 1.2 }}>{s.driver.firstName} {s.driver.lastName}</div>
                       <div className="font-mono" style={{ fontSize: 9.5, color: 'var(--text-4)', marginTop: 2, letterSpacing: '0.06em' }}>
-                        NO.{driver?.number ?? '?'} · {s.nationality}
+                        NO.{s.driver.number} · {s.driver.nationality}
                       </div>
                     </div>
                   </div>
 
                   <span style={{ fontSize: 12, color: 'var(--text-3)', alignSelf: 'center' }}>
-                    {TEAM_SHORT[teamId] ?? s.teamName.slice(0, 3).toUpperCase()}
+                    {TEAM_SHORT[teamId] ?? s.team.name.slice(0, 3).toUpperCase()}
                   </span>
 
                   <span className="font-mono" style={{ fontSize: 13, color: 'var(--text-2)', textAlign: 'right', alignSelf: 'center' }}>
@@ -388,7 +390,8 @@ function DriversPanel({ standings }: { standings: DriverStanding[] }) {
 }
 
 /* ─── Constructors panel ─────────────────────────────────────── */
-function ConstructorsPanel({ standings }: { standings: ConstructorStanding[] }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function ConstructorsPanel({ standings }: { standings: any[] }) {
   if (standings.length === 0)
     return (
       <>
@@ -421,9 +424,9 @@ function ConstructorsPanel({ standings }: { standings: ConstructorStanding[] }) 
         style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 18 }}
       >
         {standings.map((s, i) => {
-          const teamId = tid(s.teamId)
+          const teamId = tid(s.team.id)
           const team = TEAM_MAP[teamId]
-          const color = team?.color ?? '#666'
+          const color = s.team.color ?? team?.color ?? '#666'
           const drivers = team?.drivers
             .map(slug => DRIVER_MAP[slug])
             .filter(Boolean)
@@ -432,7 +435,7 @@ function ConstructorsPanel({ standings }: { standings: ConstructorStanding[] }) 
 
           return (
             <motion.div
-              key={s.teamId}
+              key={s.team.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -458,7 +461,7 @@ function ConstructorsPanel({ standings }: { standings: ConstructorStanding[] }) 
                       POS · {String(i + 1).padStart(2, '0')}
                     </span>
                     <span className="font-display" style={{ fontSize: 26, fontWeight: 500, letterSpacing: '-0.02em' }}>
-                      {s.teamName}
+                      {s.team.name}
                     </span>
                   </div>
                   <span className="font-display" style={{ fontSize: 38, fontWeight: 600, color }}>
