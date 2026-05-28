@@ -56,8 +56,9 @@ function EraCard({ era, i }: { era: (typeof ERAS)[number]; i: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, ease: 'easeOut', delay: i * 0.1 }}
+      whileHover={{ y: isAbove ? -3 : 3, transition: { duration: 0.25, ease: 'easeOut' } }}
       className="surface"
-      style={{ padding: 24, position: 'relative', overflow: 'hidden' }}
+      style={{ padding: 24, position: 'relative', overflow: 'hidden', cursor: 'default' }}
     >
       <div
         style={{

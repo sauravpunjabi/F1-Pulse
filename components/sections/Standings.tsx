@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import { getDriverStandings, getConstructorStandings } from '@/lib/api'
 import type { DriverStanding, ConstructorStanding } from '@/types'
 import { TEAM_MAP, DRIVER_MAP } from '@/constants/data'
@@ -20,6 +20,15 @@ const TEAM_SHORT: Record<string, string> = {
   ferrari: 'FER', mclaren: 'MCL', mercedes: 'MER', redbull: 'RBR',
   williams: 'WIL', aston: 'AMR', alpine: 'ALP', haas: 'HAS',
   rbulls: 'RB', audi: 'AUD', cadillac: 'CAD',
+}
+
+const rowContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.05, delayChildren: 0.05 } },
+}
+const rowItem: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
 }
 
 export default function Standings() {
@@ -100,7 +109,12 @@ function DriversPanel({ standings }: { standings: DriverStanding[] }) {
         style={{ display: 'grid', gridTemplateColumns: '0.9fr 1.1fr', gap: 18 }}
       >
         {/* Leader card */}
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          whileHover={{ y: -3, transition: { duration: 0.25, ease: 'easeOut' } }}
           className="surface"
           style={{
             padding: 32,
@@ -232,7 +246,7 @@ function DriversPanel({ standings }: { standings: DriverStanding[] }) {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Driver list */}
         <div className="surface" style={{ padding: 8, overflow: 'hidden' }}>
@@ -254,71 +268,80 @@ function DriversPanel({ standings }: { standings: DriverStanding[] }) {
             <span style={{ textAlign: 'right' }}>POINTS</span>
           </div>
 
-          {rest.map((s, i) => {
-            const teamId = tid(s.teamId)
-            const color = TEAM_MAP[teamId]?.color ?? '#666'
-            const driver = DRIVER_MAP[s.driverId]
+          <motion.div
+            variants={rowContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-80px' }}
+          >
+            {rest.map((s, i) => {
+              const teamId = tid(s.teamId)
+              const color = TEAM_MAP[teamId]?.color ?? '#666'
+              const driver = DRIVER_MAP[s.driverId]
 
-            return (
-              <div
-                key={s.driverId}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '40px 1fr 100px 60px 100px',
-                  padding: '16px 18px',
-                  borderTop: '1px solid var(--line)',
-                  cursor: 'pointer',
-                  position: 'relative',
-                  overflow: 'hidden',
-                }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.025)')}
-                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-              >
-                <span className="font-mono" style={{ fontSize: 13, color: 'var(--text-3)', alignSelf: 'center' }}>
-                  {String(s.position).padStart(2, '0')}
-                </span>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div style={{ width: 3, height: 24, background: color, borderRadius: 1, flexShrink: 0 }} />
-                  <div>
-                    <div style={{ fontSize: 15, color: 'var(--text-1)', lineHeight: 1.2 }}>{s.driverName}</div>
-                    <div className="font-mono" style={{ fontSize: 9.5, color: 'var(--text-4)', marginTop: 2, letterSpacing: '0.06em' }}>
-                      NO.{driver?.number ?? '?'} · {s.nationality}
-                    </div>
-                  </div>
-                </div>
-
-                <span style={{ fontSize: 12, color: 'var(--text-3)', alignSelf: 'center' }}>
-                  {TEAM_SHORT[teamId] ?? s.teamName.slice(0, 3).toUpperCase()}
-                </span>
-
-                <span className="font-mono" style={{ fontSize: 13, color: 'var(--text-2)', textAlign: 'right', alignSelf: 'center' }}>
-                  {s.wins}
-                </span>
-
-                <span className="font-display" style={{ fontSize: 22, fontWeight: 500, textAlign: 'right', alignSelf: 'center' }}>
-                  {s.points}
-                </span>
-
-                {/* Progress bar */}
-                <div
+              return (
+                <motion.div
+                  key={s.driverId}
+                  variants={rowItem}
+                  whileHover={{ y: -3, transition: { duration: 0.25, ease: 'easeOut' } }}
                   style={{
-                    position: 'absolute', bottom: 0, left: 18, right: 18,
-                    height: 1.5, background: 'rgba(255,255,255,0.04)',
+                    display: 'grid',
+                    gridTemplateColumns: '40px 1fr 100px 60px 100px',
+                    padding: '16px 18px',
+                    borderTop: '1px solid var(--line)',
+                    cursor: 'pointer',
+                    position: 'relative',
                     overflow: 'hidden',
                   }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.025)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <motion.div
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: maxPoints > 0 ? s.points / maxPoints : 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.9, ease: 'easeOut', delay: i * 0.08 }}
-                    style={{ height: '100%', background: color, transformOrigin: 'left' }}
-                  />
-                </div>
-              </div>
-            )
-          })}
+                  <span className="font-mono" style={{ fontSize: 13, color: 'var(--text-3)', alignSelf: 'center' }}>
+                    {String(s.position).padStart(2, '0')}
+                  </span>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ width: 3, height: 24, background: color, borderRadius: 1, flexShrink: 0 }} />
+                    <div>
+                      <div style={{ fontSize: 15, color: 'var(--text-1)', lineHeight: 1.2 }}>{s.driverName}</div>
+                      <div className="font-mono" style={{ fontSize: 9.5, color: 'var(--text-4)', marginTop: 2, letterSpacing: '0.06em' }}>
+                        NO.{driver?.number ?? '?'} · {s.nationality}
+                      </div>
+                    </div>
+                  </div>
+
+                  <span style={{ fontSize: 12, color: 'var(--text-3)', alignSelf: 'center' }}>
+                    {TEAM_SHORT[teamId] ?? s.teamName.slice(0, 3).toUpperCase()}
+                  </span>
+
+                  <span className="font-mono" style={{ fontSize: 13, color: 'var(--text-2)', textAlign: 'right', alignSelf: 'center' }}>
+                    {s.wins}
+                  </span>
+
+                  <span className="font-display" style={{ fontSize: 22, fontWeight: 500, textAlign: 'right', alignSelf: 'center' }}>
+                    {s.points}
+                  </span>
+
+                  {/* Progress bar */}
+                  <div
+                    style={{
+                      position: 'absolute', bottom: 0, left: 18, right: 18,
+                      height: 1.5, background: 'rgba(255,255,255,0.04)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <motion.div
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: maxPoints > 0 ? s.points / maxPoints : 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.9, ease: 'easeOut', delay: i * 0.08 }}
+                      style={{ height: '100%', background: color, transformOrigin: 'left' }}
+                    />
+                  </div>
+                </motion.div>
+              )
+            })}
+          </motion.div>
         </div>
       </div>
     </>
@@ -356,6 +379,7 @@ function ConstructorsPanel({ standings }: { standings: ConstructorStanding[] }) 
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.06 }}
+              whileHover={{ y: -3, transition: { duration: 0.25, ease: 'easeOut' } }}
             >
               <div
                 className="surface surface-hover"

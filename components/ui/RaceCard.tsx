@@ -135,6 +135,7 @@ export default function RaceCard({ race, index }: Props) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, ease: 'easeOut', delay: index * 0.05 }}
+      whileHover={{ y: -3, transition: { duration: 0.25, ease: 'easeOut' } }}
     >
       <div
         className="surface"

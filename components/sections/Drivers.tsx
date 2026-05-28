@@ -1,9 +1,18 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import { DRIVERS, TEAM_MAP } from '@/constants/data'
 import SectionHeader from '@/components/ui/SectionHeader'
+
+const gridContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.05, delayChildren: 0.05 } },
+}
+const gridItem: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+}
 
 export default function Drivers() {
   return (
@@ -22,26 +31,28 @@ export default function Drivers() {
           accent="One dream."
         />
 
-        <div
+        <motion.div
           className="drivers-grid"
+          variants={gridContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-80px' }}
           style={{ display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 18 }}
         >
-          {DRIVERS.map((driver, i) => {
+          {DRIVERS.map((driver) => {
             const team = TEAM_MAP[driver.teamId]
             const color = team?.color ?? '#666'
             const initials = `${driver.firstName[0]}${driver.lastName[0]}`
 
             return (
-              <Link
+              <motion.div
                 key={driver.slug}
-                href={`/drivers/${driver.slug}`}
-                style={{ textDecoration: 'none', display: 'block' }}
+                variants={gridItem}
+                whileHover={{ y: -3, transition: { duration: 0.25, ease: 'easeOut' } }}
               >
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, ease: 'easeOut', delay: i * 0.04 }}
+                <Link
+                  href={`/drivers/${driver.slug}`}
+                  style={{ textDecoration: 'none', display: 'block' }}
                 >
                   <div className="surface surface-hover" style={{ padding: 20, overflow: 'hidden', cursor: 'pointer' }}>
                     {/* Driver number */}
@@ -155,11 +166,11 @@ export default function Drivers() {
                       ))}
                     </div>
                   </div>
-                </motion.div>
-              </Link>
+                </Link>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

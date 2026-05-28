@@ -1,3 +1,6 @@
+'use client'
+
+import { motion, type Variants } from 'framer-motion'
 import Link from 'next/link'
 import Logo from '@/components/ui/Logo'
 
@@ -34,15 +37,24 @@ const NAV_COLS = [
   {
     title: 'Legal',
     links: [
-      { label: 'Privacy Policy', href: '/privacy' },
-      { label: 'Terms of Use',   href: '/terms' },
+      { label: 'Privacy Policy',  href: '/privacy' },
+      { label: 'Terms of Use',    href: '/terms' },
       { label: 'Cookie Settings', href: '/cookies' },
-      { label: 'Accessibility',  href: '/accessibility' },
+      { label: 'Accessibility',   href: '/accessibility' },
     ],
   },
 ]
 
 const SOCIALS = ['X', 'IG', 'YT', 'TT']
+
+const container: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+}
+const item: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+}
 
 export default function Footer() {
   return (
@@ -64,8 +76,12 @@ export default function Footer() {
       <div style={{ maxWidth: 1380, margin: '0 auto', padding: '80px 32px 32px' }}>
 
         {/* Main grid */}
-        <div
+        <motion.div
           className="footer-grid"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-80px' }}
           style={{
             display: 'grid',
             gridTemplateColumns: '1.4fr repeat(4, 1fr)',
@@ -74,7 +90,7 @@ export default function Footer() {
           }}
         >
           {/* Col 1 — Brand */}
-          <div>
+          <motion.div variants={item}>
             <Logo />
             <p
               style={{
@@ -113,11 +129,11 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Nav cols */}
           {NAV_COLS.map(({ title, links }) => (
-            <div key={title}>
+            <motion.div key={title} variants={item}>
               <p
                 className="font-mono"
                 style={{
@@ -148,9 +164,9 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Watermark + bottom bar */}
         <div style={{ borderTop: '1px solid var(--line)', paddingTop: 32, position: 'relative', overflow: 'hidden' }}>

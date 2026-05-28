@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import { TEAMS, DRIVERS, DRIVER_MAP } from '@/constants/data'
 import SectionHeader from '@/components/ui/SectionHeader'
 
@@ -36,6 +36,15 @@ const FORM: Record<string, number[]> = {
   cadillac: [13,14,12,14,13,13,14],
 }
 
+const gridContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
+}
+const gridItem: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+}
+
 export default function Teams() {
   const [hoveredTeam, setHoveredTeam] = useState<string | null>(null)
 
@@ -64,8 +73,12 @@ export default function Teams() {
           }
         />
 
-        <div
+        <motion.div
           className="teams-grid"
+          variants={gridContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-80px' }}
           style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 18 }}
         >
           {TEAMS.map(team => {
@@ -76,16 +89,16 @@ export default function Teams() {
             const pts = CPTS[team.id] ?? 0
 
             return (
-              <Link
+              <motion.div
                 key={team.id}
-                href={`/teams/${team.id}`}
-                style={{ textDecoration: 'none', display: 'block' }}
-                onMouseEnter={() => setHoveredTeam(team.id)}
-                onMouseLeave={() => setHoveredTeam(null)}
+                variants={gridItem}
+                whileHover={{ y: -3, transition: { duration: 0.25, ease: 'easeOut' } }}
               >
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                <Link
+                  href={`/teams/${team.id}`}
+                  style={{ textDecoration: 'none', display: 'block' }}
+                  onMouseEnter={() => setHoveredTeam(team.id)}
+                  onMouseLeave={() => setHoveredTeam(null)}
                 >
                   <div
                     className="surface"
@@ -125,7 +138,6 @@ export default function Teams() {
                           position: 'relative', overflow: 'hidden', flexShrink: 0,
                         }}
                       >
-                        {/* Radial highlight */}
                         <div
                           style={{
                             position: 'absolute', top: -4, right: -4,
@@ -219,11 +231,11 @@ export default function Teams() {
                       ))}
                     </div>
                   </div>
-                </motion.div>
-              </Link>
+                </Link>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

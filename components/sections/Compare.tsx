@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import { DRIVERS, TEAM_MAP } from '@/constants/data'
 import { CAREER } from '@/constants/careerStats'
 import type { CareerStat } from '@/constants/careerStats'
@@ -26,6 +26,15 @@ const selectStyle: React.CSSProperties = {
   color: 'var(--text-1)',
   cursor: 'pointer',
   outline: 'none',
+}
+
+const rowContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
+}
+const rowItem: Variants = {
+  hidden: { opacity: 0, x: -12 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.4, ease: 'easeOut' } },
 }
 
 export default function Compare() {
@@ -83,15 +92,22 @@ export default function Compare() {
         </div>
 
         {/* Stat bars — key forces re-animation on driver change */}
-        <div key={`${d1Index}-${d2Index}`} style={{ marginTop: 32 }}>
+        <motion.div
+          key={`${d1Index}-${d2Index}`}
+          variants={rowContainer}
+          initial="hidden"
+          animate="show"
+          style={{ marginTop: 32 }}
+        >
           {STATS.map(({ label, key }) => {
             const v1 = c1[key]
             const v2 = c2[key]
             const max = Math.max(v1, v2, 1)
 
             return (
-              <div
+              <motion.div
                 key={key}
+                variants={rowItem}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -151,10 +167,10 @@ export default function Compare() {
                 >
                   {v2.toLocaleString()}
                 </span>
-              </div>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   )

@@ -1,3 +1,16 @@
+'use client'
+
+import { motion, type Variants } from 'framer-motion'
+
+const container: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+}
+const item: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+}
+
 interface SectionHeaderProps {
   kicker: string
   title: string
@@ -8,7 +21,11 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ kicker, title, accent, sub, right }: SectionHeaderProps) {
   return (
-    <div
+    <motion.div
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: '-80px' }}
       style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -19,10 +36,11 @@ export default function SectionHeader({ kicker, title, accent, sub, right }: Sec
       }}
     >
       <div style={{ maxWidth: 680 }}>
-        <p className="eyebrow" style={{ marginBottom: 22 }}>
+        <motion.p variants={item} className="eyebrow" style={{ marginBottom: 22 }}>
           {kicker}
-        </p>
-        <h2
+        </motion.p>
+        <motion.h2
+          variants={item}
           className="font-display"
           style={{
             fontSize: 'clamp(36px, 5vw, 64px)',
@@ -34,14 +52,18 @@ export default function SectionHeader({ kicker, title, accent, sub, right }: Sec
         >
           {title}
           {accent && <span style={{ color: 'var(--accent)' }}>{accent}</span>}
-        </h2>
+        </motion.h2>
         {sub && (
-          <p style={{ fontSize: 16, color: 'var(--text-3)', maxWidth: 560 }}>
+          <motion.p variants={item} style={{ fontSize: 16, color: 'var(--text-3)', maxWidth: 560 }}>
             {sub}
-          </p>
+          </motion.p>
         )}
       </div>
-      {right && <div style={{ flexShrink: 0 }}>{right}</div>}
-    </div>
+      {right && (
+        <motion.div variants={item} style={{ flexShrink: 0 }}>
+          {right}
+        </motion.div>
+      )}
+    </motion.div>
   )
 }
